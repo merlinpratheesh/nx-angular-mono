@@ -7,7 +7,8 @@ pipeline {
 
     environment {
         IMAGE_NAME = "mycompany/${params.APP_NAME}:latest"
-        APP_DIR   = "${WORKSPACE}\\apps\\${params.APP_NAME}"
+        WORKSPACE_ROOT = "${WORKSPACE}"
+        DIST_DIR = "${WORKSPACE}\\dist\\apps\\${params.APP_NAME}"
     }
 
     stages {
@@ -19,20 +20,20 @@ pipeline {
             }
         }
 
-        // 2️⃣ Install dependencies for the selected app
+        // 2️⃣ Install dependencies (workspace root)
         stage('Install Dependencies') {
             steps {
-                dir("${APP_DIR}") {
+                dir("${WORKSPACE_ROOT}") {
                     bat "npm install"
                 }
             }
         }
 
-        // 3️⃣ Build Angular app for the selected app
+        // 3️⃣ Build selected Angular app
         stage('Build Angular App') {
             steps {
-                dir("${APP_DIR}") {
-                    bat "npm run build -- --configuration=production"
+                dir("${WORKSPACE_ROOT}") {
+                    bat "npx nx build ${params.APP_NAME} --configuration=production"
                 }
             }
         }
