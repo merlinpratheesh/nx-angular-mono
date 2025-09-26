@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        IMAGE_NAME = "mycompany/${params.APP_NAME}:latest"
+        IMAGE_NAME = "nxDockerDeploy/${params.APP_NAME}:latest"
         WORKSPACE_ROOT = "${WORKSPACE}"
         DIST_DIR = "${WORKSPACE}\\dist\\apps\\${params.APP_NAME}"
     }
