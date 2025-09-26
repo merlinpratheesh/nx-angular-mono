@@ -14,7 +14,7 @@ pipeline {
         // 1️⃣ Checkout Code from Git
         stage('Checkout Code') {
             steps {
-                git branch: 'master', url: 'https://github.com/username/nx-workspace.git'
+                git branch: 'master', url: 'https://github.com/merlinpratheesh/nx-angular-mono.git'
             }
         }
 
