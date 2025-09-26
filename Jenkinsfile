@@ -7,6 +7,7 @@ pipeline {
 
     environment {
         IMAGE_NAME = "mycompany/${params.APP_NAME}:latest"
+        APP_DIR   = "${WORKSPACE}\\apps\\${params.APP_NAME}"
     }
 
     stages {
@@ -18,25 +19,28 @@ pipeline {
             }
         }
 
-        // 2️⃣ Install dependencies & Build Angular app
-        stage('Install & Build Angular') {
+        // 2️⃣ Install dependencies for the selected app
+        stage('Install Dependencies') {
             steps {
-                bat 'npm ci'
-                bat "npx nx build ${params.APP_NAME} --prod"
+                dir("${APP_DIR}") {
+                    bat "npm install"
+                }
             }
         }
 
-        // 3️⃣ Build Docker image
+        // 3️⃣ Build Angular app for the selected app
+        stage('Build Angular App') {
+            steps {
+                dir("${APP_DIR}") {
+                    bat "npm run build -- --configuration=production"
+                }
+            }
+        }
+
+        // 4️⃣ Build Docker image
         stage('Build & Dockerize') {
             steps {
                 bat "docker build --build-arg APP_NAME=${params.APP_NAME} -t ${IMAGE_NAME} ."
-            }
-        }
-
-        // 4️⃣ Push Docker image
-        stage('Push Image') {
-            steps {
-                bat "docker push ${IMAGE_NAME}"
             }
         }
 
