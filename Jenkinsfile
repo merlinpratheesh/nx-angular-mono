@@ -39,11 +39,11 @@ pipeline {
         }
 
         // 4️⃣ Build Docker image
-        stage('Build & Dockerize') {
-            steps {
-                bat "docker build --build-arg APP_NAME=${params.APP_NAME} -t ${IMAGE_NAME} ."
-            }
-        }
+     stage('Build & Dockerize') {
+    steps {
+        bat "docker build --build-arg APP_NAME=${params.APP_NAME} -t ${IMAGE_NAME} -f docker/Dockerfile ."
+    }
+}
 
         // 5️⃣ Deploy container
         stage('Deploy') {
